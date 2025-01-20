@@ -1,5 +1,5 @@
 const { MessageEmbed, WebhookClient } = require('discord.js')
-const MAX_MESSAGE_LENGTH = 45
+const MAX_MESSAGE_LENGTH = 1024
 
 module.exports.send = (id, token, repo, branch, url, commits, size, threadId) =>
     new Promise((resolve, reject) => {
@@ -102,7 +102,7 @@ function getChangeLog(repo, branch, commits, size) {
     changelog += `**🔄 Recent Changes:**\n`;
 
     for (const i in commits) {
-        if (i > 8) {
+        if (i > 32) {
             changelog += `\n**+${size - i}** more changes...\n`;
             break;
         }
