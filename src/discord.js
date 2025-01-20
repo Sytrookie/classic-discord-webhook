@@ -141,7 +141,7 @@ function getChangeLog(repo, branch, commits, size) {
             message = message.replace(/^(garage|vehicle|vehicles):/i, '🚗 ');
             message = message.replace(/^(job|jobs):/i, '💼 ');
             message = message.replace(/^(ps-housing|house|property|properties|property|properties):/i, '🏠 ');
-
+            message = message.replace(/^(Sytrookie): /i, '@Developers');
         }
 
         if (message.length > MAX_MESSAGE_LENGTH) {
