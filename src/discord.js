@@ -85,37 +85,63 @@ function createEmbed(repo, branch, url, commits, size) {
 
 function getChangeLog(repo, branch, commits, size) {
     let changelog = '';
-
     let obfuscated = false;
 
+    // Check if any commit should be obfuscated
     for (const i in commits) {
         const commit = commits[i];
-        let message = commit.message;
-        if (message.startsWith('%')) {
+        if (commit.message.startsWith('%')) {
             obfuscated = true;
             branch = obfuscateMessage(branch);
             repo = obfuscateMessage(repo);
+            break;
         }
     }
 
+    // Add a header for the changelog
+    changelog += `**🔄 Recent Changes:**\n`;
+
     for (const i in commits) {
         if (i > 8) {
-            changelog += `+ ${size - i} more...\n`;
+            changelog += `\n**+${size - i}** more changes...\n`;
             break;
         }
-
-
 
         const commit = commits[i];
         const sha = commit.id.substring(0, 6);
         let message = commit.message;
 
-        // obfuscate message if it starts with '%'
+        // Remove the % prefix if it exists
+        if (message.startsWith('%')) {
+            message = message.substring(1);
+        }
+
+        // obfuscate message if needed
         if (obfuscated) {
             message = obfuscateMessage(message);
-
-            // replace spaces with '▌'
             message = message.replace(/ /g, '▌');
+        } else {
+            // Add some formatting for regular messages
+            // Look for specific keywords to add emojis
+            message = message.replace(/^(fix|fixed|fixes|bug|bugfix|bugfixes|bugfixing|bugfixes|bugfixing):/i, '🔧 ');
+            message = message.replace(/^(feat|add|added|adds|feature|features|featureing|featureing|featureing|featureing):/i, '✨ ');
+            message = message.replace(/^(remove|removed|removeing|removeing|removeing|removeing):/i, '🗑️ ');
+            message = message.replace(/^(update|updated|updateing|updateing|updateing|updateing):/i, '📝 ');
+            message = message.replace(/^(security|secure):/i, '🔒 ');
+            message = message.replace(/^(bug|bugfix):/i, '🐛 ');
+            message = message.replace(/^(refactor|refactored):/i, '🔄 ');
+            message = message.replace(/^(docs|documentation):/i, '📚 ');
+            message = message.replace(/^(test|testing):/i, '🧪 ');
+            message = message.replace(/^(style|styling):/i, '🎨 ');
+            message = message.replace(/^(chore|choreography):/i, '🧹 ');
+            message = message.replace(/^(perf|performance):/i, '🚀 ');
+            message = message.replace(/^(revert|reverted):/i, '⏪ ');
+            message = message.replace(/^(script|scripts|scripting|scripting|scripting|scripting):/i, '💻 ');
+            message = message.replace(/^(config|configuration|configuring|configuring|configuring|configuring):/i, '🔧 ');
+            message = message.replace(/^(garage|vehicle|vehicles):/i, '🚗 ');
+            message = message.replace(/^(job|jobs):/i, '💼 ');
+            message = message.replace(/^(ps-housing|house|property|properties|property|properties):/i, '🏠 ');
+
         }
 
         if (message.length > MAX_MESSAGE_LENGTH) {
@@ -123,9 +149,9 @@ function getChangeLog(repo, branch, commits, size) {
         }
 
         if (obfuscated) {
-            changelog += `\`${sha}\` — ${message}\n`;
+            changelog += `\`${sha}\` ${message}\n`;
         } else {
-            changelog += `\`${sha}\` — ${message}\n`;
+            changelog += `\`${sha}\` ${message}\n`;
             //changelog += `[\`${sha}\`](${commit.url}) — ${message}\n`;
         }
     }
