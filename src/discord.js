@@ -9,6 +9,10 @@ module.exports.send = (id, token, repo, branch, url, commits, size, threadId) =>
             if (!id || !token) {
                 throw new Error('ID or token is missing')
             }
+            // Filter out merge commits
+            commits = commits.filter(commit => !commit.message.toLowerCase().startsWith('merge'));
+            size = commits.length;
+
             client = new WebhookClient({
                 id,
                 token
@@ -152,7 +156,6 @@ function getChangeLog(repo, branch, commits, size) {
             changelog += `\`${sha}\` ${message}\n`;
         } else {
             changelog += `\`${sha}\` ${message}\n`;
-            //changelog += `[\`${sha}\`](${commit.url}) — ${message}\n`;
         }
     }
 
