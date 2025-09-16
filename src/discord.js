@@ -65,7 +65,7 @@ function createEmbed(repo, branch, url, commits, size) {
         }
     } else {
         // latest.author.avatar = `https://github.com/${latest.author.username}.png?size=32`
-        latest.author.avatar = `https://i.imgur.com/yZcbfqm.png?size=32`
+        latest.author.avatar = `https://i.imgur.com/FjopNCV.png?size=32`
     }
 
     const changeLog = getChangeLog(repo, branch, commits, size);
@@ -83,7 +83,7 @@ function createEmbed(repo, branch, url, commits, size) {
         .setTimestamp(Date.parse(latest.timestamp))
         .setFooter({
             //   text: `⚡ Edited by @${latest.author.username}`
-            text: `⚡ Edited by SALife @Developers`
+            text: `⚡Paragon Roleplay Development`
         })
 }
 
